@@ -35,7 +35,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new CustomIoAdapter(app));
 
 
-  await app.listen(configService.get<number>('PORT') || 3000);
+  await app.listen(process.env.PORT || 8888, '0.0.0.0');
 }
 
 bootstrap();
