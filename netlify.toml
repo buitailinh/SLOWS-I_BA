@@ -1,4 +1,4 @@
 [build]
-  command = "node main.js"
+  command = "npm run start:prod"
   publish = "path/to/build/directory"
 
