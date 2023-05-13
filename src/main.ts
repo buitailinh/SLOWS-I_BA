@@ -3,7 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import appConfig from './configs/server.config';
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common';
-import cors from 'cors'
+import cors from 'cors';
+import { Request, Response, NextFunction } from 'express';
 import * as bodyParser from 'body-parser';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { CustomIoAdapter } from './configs/websocket/custom-io-adapter';
@@ -34,6 +35,14 @@ async function bootstrap() {
   // app.enableCors();
   app.useWebSocketAdapter(new CustomIoAdapter(app));
 
+  app.use('/health', (req: Request, res: Response) => {
+    const isHealthy = true;
+    if (isHealthy) {
+      return res.sendStatus(200);
+    } else {
+      return res.sendStatus(503);
+    }
+  });
 
   await app.listen(process.env.PORT || 8888, '0.0.0.0');
 }
