@@ -1,0 +1,76 @@
+cache:
+  key: $CI_COMMIT_REF_SLUG # only apply for current branch
+  paths:
+    - node_modules/
+  policy: pull-push
+
+stages:
+  - install
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  ECR: 364925535531.dkr.ecr.ap-southeast-1.amazonaws.com
+  ECR_REPO: user_management
+  IMAGE_TAG: $CI_COMMIT_SHORT_SHA
+  EKS_CLUSTER_NAME: cluster-blo-vpc
+
+.Tags: &tags
+  - vops-runner
+
+.deployBranch: &deployBranch
+  - testing
+  - develop
+
+installation:
+  stage: install
+  image:
+    name: node:16-alpine
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist
+  tags: *tags
+  only: *deployBranch
+
+lint:
+  stage: test
+  image:
+    name: node:16-alpine
+  script:
+    - npm run lint
+  tags: *tags
+  only: *deployBranch
+
+build:
+  stage: build
+  image:
+    name: amazon/aws-cli:2.4.15
+    entrypoint: [ "" ]
+  services:
+    - docker:dind
+  tags: *tags
+  only: *deployBranch
+  allow_failure: false
+  script:
+    - amazon-linux-extras install docker
+    - cat $env > .env
+    - docker build -t $ECR/$ECR_REPO:$IMAGE_TAG .
+    - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR
+    - docker push $ECR/$ECR_REPO:$IMAGE_TAG
+
+deploy:
+  stage: deploy
+  image: dtzar/helm-kubectl:3.8.2
+  tags: *tags
+  only: *deployBranch
+  script:
+    - apk add --no-cache python3 py3-pip; pip3 install --upgrade pip; pip3 install --no-cache-dir awscli==1.22.101; rm -rf /var/cache/apk/*
+    - aws eks update-kubeconfig --name $EKS_CLUSTER_NAME --region $AWS_DEFAULT_REGION
+    - kubectl config set-context --current --namespace=default
+    - helm upgrade --install user-management ./.helm/user-management --set image.repository=$ECR/$ECR_REPO:$IMAGE_TAG

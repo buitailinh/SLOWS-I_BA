@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "sheets-nestjs-358216",
+  "private_key_id": "d2b624a6d1b763c3ee80db34bc75b870fad13be0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCVIruzO4zbM3JB\nVQb2jqwkZY+0nUf6Hk+NWH2rJkV9MDxKeolHnI10fO4EVM+zXjk6kVo50QtBtPFp\nGGQvbo8Ako8HFy7rfnJvOZ3EcJ4w24hU5wusgxC0il4QYWJUpoIIX82IjT/iFpty\nahUkZEkQW3GiHBH90lW6oZaUg0Lv9EWyWsMFZpvJc1/Qs2MJ0bW21nLIT/2W+TYy\nftyPoAhzjVpTcNkxxQQ3vdDqPLzrLSU0a34KD/DCl38aYcDkFzTlOx9012eixxUT\nbFBiL9qWnNb81hNVVLisTMpq+kzSo90O76BJfQvs5to7mXJw37eVb+RpDi16xUiS\nXJkneA6zAgMBAAECggEACL+fXC3Hnwo/DxcST/9hmMb+bZ12XfVOPF/vC0208NmW\nB9Z1XCaSY716ZvWks4R4/fcN4GtjaijXqo8cPW4SZHm0ezmAbp8dzmmGWEI0/W+7\naSOemzGbFsQxLWvRDV8xLJWWJIcIstYZq1YOxHI/mP6MRXK5GXcvwUF+aFrk39eR\nGzkiDWrki6/qiB576/oqqGvx0VvfnmVsQaFeIfjkya9CvEeRJAoB+9aW87Gduir7\nL3nJPOeiBdnNZ/O0yQtC1MPwFiqWhQ8zK0swtRhNcmB9ZO5vbKQQFeUWWBUg7y6x\nshrH1c9ttQTFVZdf3pwSOueYtzjTtzMbCLHla5kRsQKBgQDHY7+L3UssSntTM6ZD\n5GxfXvq0x5e34WRJKScibHEPBPWuLewmfTor4rh1XzSrq5G3HrS5Ov5/IpbFJhlw\n0MOlcORcudHwOX/eqN9Z0BYoQwbSsrI/H+s5IRaWeLt+CAP9PniKVpjV039gMR2y\nnOPgj1QkFb80DcI7gE3NLKRFMQKBgQC/el9VfAMzIMgoT9+9IVP7YJMcgVKxXXty\nE7jlTCrDDqKQpIygno7nynp3uXj5QfUI6ACzhDKkoguhO5/teW/ebUM6DOnrbp+6\nGH1QlF0dY5rTjU5SdKOMZfGiTj1GbjlnCTNE68g+MXo7MMIJRsDR3WanzLJcrKY2\nAKZHPFnpIwKBgHjYE7eJH45wdd4vZ42uW6BRyFDYxzNC/6z3rChI4RzhPKWcX4vU\nSfVfK7y3Pwzspxv9GDtLbgNPy2EhfjnJzUnv6ffpBzw5HS6t2vBsFYHBXdlFRJLN\nnZq6Wx5HfhsccI6D1jrB0U+HJ6P9IKqoO9RWCgD0zTWXQSke0giQDd+BAoGBALG7\nRQJ0OgQbSa8hdOx5IxsSaXrsD3XS7+LTq6wrJwYnb34TPvVYOA2vRD4dSs0TC/9Y\nWk5HRzrJr0HZtnkXX192zA/2LKr75Ac49Bj3nfbJnc0APNMMsUKA3elp9jaJ2X5q\na8xtj1ErW+nVOEakBhbHC6J1vpmHKEC4GZ/FxS9BAoGBAKuXZO7gqL+BNqcnu7Bk\nlhab5oPzgFGmc1z9tF4ZOK3dOHMFugg9N02QmVVyvca3WEc4OMvgjxdSClYpKs5c\nS5sfUcv5gCkVIt8CaQniNYbidEWb1ZTJmHH4BxIoy3hPReFmFnaAa3yafwJzHE8P\ngEOYxcjYs7B3tDntMkAeCHuN\n-----END PRIVATE KEY-----\n",
+  "client_email": "sheepts-nestjs@sheets-nestjs-358216.iam.gserviceaccount.com",
+  "client_id": "117139073170365840262",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/sheepts-nestjs%40sheets-nestjs-358216.iam.gserviceaccount.com",
+  "sheep_id": "1vfS2zasX1-mYcUBCAjmlNvcDLB860SZ6k9owb6jhYdw"
+}
