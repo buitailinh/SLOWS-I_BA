@@ -22,7 +22,7 @@ export const MYSQL_CONFIG = {
 };
 
 export const MONGODB_URL = {
-  url: process.env.MONGODB_URL || ''
+  url: process.env.MONGODB_URL || "mongodb+srv://btlinh:linh2001@cluster0.6g1krzk.mongodb.net/?retryWrites=true&writeConcern=majority"
 }
 
 export const REDIS_CONFIG = {
