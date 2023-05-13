@@ -1,0 +1,4 @@
+[build]
+  command = "node main.js"
+  publish = "path/to/build/directory"
+
