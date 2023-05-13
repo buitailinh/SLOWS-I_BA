@@ -12,13 +12,13 @@ export class SmsService {
   constructor(
     private readonly configService: ConfigService
   ) {
-    const accountSid = configService.get('TWILIO_ACCOUNT_SID');
-    const authToken = configService.get('TWILIO_AUTH_TOKEN');
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
     this.twilioClient = new Twilio(accountSid, authToken);
   }
 
   initiatePhoneNumberVerification(phoneNumber: string) {
-    const serviceSid = this.configService.get('TWILIO_VERIFICATION_SERVICE_SID');
+    const serviceSid = process.env.TWILIO_VERIFICATION_SERVICE_SID;
     let phone;
     if (phoneNumber[0] === '0') {
       phone = phoneNumber.replace('0', '+84');
@@ -29,7 +29,7 @@ export class SmsService {
   }
 
   async confirmPhonePhoneNumber(phoneNumber: string, verificationCode: string) {
-    const serviceSid = this.configService.get('TWILIO_SERVICE_SID');
+    const serviceSid = process.env.TWILIO_SERVICE_SID;
     const result = await this.twilioClient.verify.services(serviceSid)
       .verificationChecks
       .create({ to: phoneNumber, code: verificationCode })
