@@ -38,7 +38,7 @@ export class DalleController {
   }
 
   @Get('/save')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async getAll(@Query() query) {
     return this.dalleService.getAll(query);
   }
