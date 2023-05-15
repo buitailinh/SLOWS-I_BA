@@ -1,3 +1,4 @@
+import { JobQueueService } from './../../share/job-queue/job-queue.service';
 import { UserChatUserDto } from './dto/user-chat-user.dto';
 import { ERROR } from 'src/share/common/error-code.const';
 import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
@@ -17,6 +18,7 @@ export class ChatUserService {
     private userService: UserService,
     private messageService: MessagesService,
     private chatUserRepository: ChatUserRepository,
+    private jobQueueService: JobQueueService
 
   ) { }
   async create(createChatUserDto: CreateChatUserDto, userId) {
@@ -196,7 +198,11 @@ export class ChatUserService {
     chatUserFound.messages.push(message._id);
     chatUserFound.updatedAt = new Date;
     await this.chatUserRepository.update(chatUserFound._id, chatUserFound)
-
+    await this.jobQueueService.sendMsgNotification({
+      msgId: chatUserFound._id.toString(),
+      usersId: chatUserFound.users,
+      userIdSend: userFound._id.toString()
+    })
     const chatLength = chatUserFound.messages.length;
     const startIndex = chatLength > 1 ? chatLength - 1 : 0;
     const lastNumberElement = await Promise.all(chatUserFound.messages.slice(startIndex).map(itemChat => {

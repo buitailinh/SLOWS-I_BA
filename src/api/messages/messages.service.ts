@@ -67,9 +67,9 @@ export class MessagesService {
   }
 
   async updateReadMsg(id, userId) {
-    console.log('vvvv')
+    // console.log('vvvv')
     const messageFound = await this.findOne(id);
-    console.log('abc2', messageFound.reading.length)
+    // console.log('abc2', messageFound.reading.length)
     messageFound.reading.push(userId.toString());
 
     // await this.messagesRepository.update(messageFound._id, messageFound);

@@ -9,6 +9,7 @@ import { Job, Queue } from 'bull';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateJobQueueDto } from './dto/create-job-queue.dto';
+import { NotificationMsgQueueDto } from './dto/notification-msg-queue.dto';
 
 
 export class JobQueueService implements OnModuleInit {
@@ -37,6 +38,10 @@ export class JobQueueService implements OnModuleInit {
     await this.queue.add('send-notification-follow', notification, { delay: 1000 });
   }
 
+  async sendMsgNotification(notification: NotificationMsgQueueDto) {
+    await this.queue.add('send-notification-msg', notification);
+  }
+
   async addBlockUser(createJobBlock: CreateJobBlockQueueDto) {
     const { time, creatorId, receiverId } = createJobBlock;
 
@@ -49,9 +54,10 @@ export class JobQueueService implements OnModuleInit {
       }
     }
     await this.queue.add('add-block-user', createJobBlock, { delay: time });
+    console.log(`User ${creatorId} was block ${receiverId} with time: ${time} !`);
     return {
       success: true,
-      message: `User ${creatorId} was block ${receiverId} !`,
+      message: `User ${creatorId} was block ${receiverId} with time: ${time} !`,
     }
   }
 

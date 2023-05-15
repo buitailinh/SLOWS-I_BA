@@ -37,8 +37,9 @@ export class PostController {
   }
 
   @Get('/users/:user')
-  findOneByUser(@Param('user') userId) {
-    return this.postService.getPostByUser(userId);
+  @UseGuards(JwtAuthGuard)
+  findOneByUser(@Param('user') userId, @Request() req) {
+    return this.postService.getPostByUser(userId, req.user._id);
   }
 
   @Patch('/like/:id')

@@ -8,7 +8,7 @@ import { AppKey } from './../../share/common/app.key';
 
 import { createConnection, Like, ObjectID } from 'typeorm';
 
-import { HttpException, HttpStatus, Injectable, NotFoundException, StreamableFile, Query } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException, StreamableFile, Query, CacheKey } from '@nestjs/common';
 import { ERROR } from 'src/share/common/error-code.const';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
@@ -79,12 +79,31 @@ export class UserService {
    * @param _id
    * @returns
    */
-  async getByUserId(_id): Promise<User> {
+  async getByUserId(_id, userId?: any): Promise<User> {
     const user = await this.userRepository.findOne(_id)
     if (!user) {
       throw new NotFoundException(ERROR.USER_NOT_FOUND.MESSAGE);
     }
     return user;
+  }
+
+
+  async getByUser(_id, userId): Promise<any> {
+    const userCheck = await this.userRepository.findOne(_id);
+    if (!userCheck) {
+      throw new NotFoundException(ERROR.USER_NOT_FOUND.MESSAGE);
+    }
+    let checkBlock = null;
+    delete userCheck.password;
+    if (userCheck._id !== userId) {
+      const userFound = await this.userRepository.findOne(userId);
+      checkBlock = await this.followService.CheckUserBlock(userFound, userCheck);
+    }
+    if (checkBlock.status) return {
+      ...userCheck,
+      ...checkBlock
+    }
+    return userCheck;
   }
 
   /**
@@ -392,7 +411,8 @@ export class UserService {
   }
 
   async findFollowOfUser(creator, receiver) {
-    // console.log('asdv', creator, receiver);
+
+    if (receiver === "false") return;
     const creatorFound = await this.getByUserId(creator);
     const receiverFound = await this.getByUserId(receiver);
     return this.followService.findOneDetail({ creator: creatorFound, receiver: receiverFound });

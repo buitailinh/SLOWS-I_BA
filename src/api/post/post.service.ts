@@ -129,15 +129,24 @@ export class PostService {
     return post;
   }
 
-  async getPostByUser(userId) {
+  async getPostByUser(userId, youId?: any) {
     const userFound = await this.userService.getByUserId(userId);
+    let checkBlock = null;
+    if (youId) {
+      const you = await this.userService.getByUserId(youId);
+      checkBlock = await this.followingService.CheckUserBlock(you, userFound);
+    }
 
-    const listPost = await this.postRepository.findAndOptions({
-      where: { 'author': userFound._id },
-      order: { createdAt: 'DESC' }
-    });
-    // console.log('data', listPost, userId);
-    return listPost;
+
+    if (!checkBlock.status) {
+      const listPost = await this.postRepository.findAndOptions({
+        where: { 'author': userFound._id },
+        order: { createdAt: 'DESC' }
+      });
+      // console.log('data', listPost, userId);
+      return listPost;
+    }
+    return checkBlock;
   }
 
   async update(postId: ObjectID, userId, updatePostDto: UpdatePostDto, file?: Express.Multer.File) {

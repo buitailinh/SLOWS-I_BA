@@ -1,3 +1,4 @@
+import { JobQueueModule } from './../../share/job-queue/job-queue.module';
 import { ChatUserController } from './chat-user.controller';
 import { MessagesModule } from './../messages/messages.module';
 import { CloudinaryModule } from './../../share/cloudinary/cloudinary.module';
@@ -11,7 +12,7 @@ import { chatUserProvider } from './chat-user.provider';
 
 
 @Module({
-  imports: [DatabaseModule, CloudinaryModule, MessagesModule, UserModule],
+  imports: [DatabaseModule, CloudinaryModule, MessagesModule, UserModule, JobQueueModule],
   controllers: [ChatUserController],
   providers: [ChatUserGateway, ChatUserService, ChatUserRepository, ...chatUserProvider],
   exports: [ChatUserService, ChatUserRepository]

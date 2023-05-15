@@ -90,13 +90,12 @@ export class ChatUserGateway {
   @SubscribeMessage('send-msg')
   async sendMsg(client: Socket, sendMessageDto: CreateMessageDto) {
     const sendUserSocket = this.onlineUsers.get(sendMessageDto.chatUser);
-    // console.log('data', sendUserSocket);
     try {
       const data = await this.chatUserService.sendMessage(sendMessageDto.userSend, sendMessageDto);
-
-      sendUserSocket.forEach(element => {
-        this.server.to(element).emit('recieve-msg', data);
-      });
+      if (sendUserSocket)
+        sendUserSocket.forEach(element => {
+          this.server.to(element).emit('recieve-msg', data);
+        });
     } catch (error) {
       console.error(error);
       client.disconnect();

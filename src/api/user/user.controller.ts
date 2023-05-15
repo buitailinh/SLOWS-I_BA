@@ -95,7 +95,10 @@ export class UserController {
   @Get('/follow/:id')
   @UseGuards(JwtAuthGuard)
   findFollowOfUser(@Param('id') id, @Request() req) {
-    if (!id) return
+    if (!id) {
+      console.log('id is undefined');
+      return;
+    }
     return this.userService.findFollowOfUser(req.user._id, id);
   }
 
@@ -131,8 +134,9 @@ export class UserController {
 
 
   @Get(':id')
-  findById(@Param('id') id: number): Promise<User> {
-    return this.userService.getByUserId(id);
+  @UseGuards(JwtAuthGuard)
+  findById(@Param('id') id, @Request() req): Promise<User> {
+    return this.userService.getByUser(id, req.user._id);
   }
 
 

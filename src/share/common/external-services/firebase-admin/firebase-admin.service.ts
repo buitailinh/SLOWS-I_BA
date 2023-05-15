@@ -32,9 +32,9 @@ export class FirebaseDatabaseService {
 
     if (records) {
       for (const key in records) {
-        if (records[key].userId === user._id.toString() && records[key].delete !== true) {
+        if (records[key].userId === user._id.toString()) {
           // Cập nhật trạng thái 'delete' thành 'true'
-          await likesRef.child(`${key}/delete`).set(true);
+          await likesRef.child(`${key}/delete`).set(!records[key].delete);
         }
       }
     } else {
@@ -123,6 +123,57 @@ export class FirebaseDatabaseService {
 
     await notificationsRef.update(updates);
   }
+
+
+  async notificationChat(msgId, usersId, userIdSend) {
+    const chatRef = this.getNodeReference(`/chat/${msgId}`);
+
+    const snapshot = await chatRef.once('value');
+    if (snapshot.exists()) {
+      // Get the current data
+      const data = snapshot.val();
+
+      // Remove entries with userId not in usersId
+      for (const key in data) {
+        const userId = data[key].userId;
+
+        if (!usersId.includes(userId)) {
+          await chatRef.child(key).remove();
+        }
+      }
+
+      // Add missing userIds from usersId
+      for (const userId of usersId) {
+        const userEntryRef = chatRef.child(userId);
+
+        const userEntrySnapshot = await userEntryRef.once('value');
+        if (!userEntrySnapshot.exists()) {
+          await userEntryRef.set({ amount: 1, userId });
+        } else {
+          if (userEntrySnapshot.val().userId !== userIdSend) {
+            const amount = userEntrySnapshot.val().amount || 0;
+            await userEntryRef.update({ amount: amount + 1 });
+          }
+        }
+      }
+
+      // Update amount for userIdSend
+      const userIdSendRef = chatRef.child(userIdSend);
+      const userIdSendSnapshot = await userIdSendRef.once('value');
+      if (!userIdSendSnapshot.exists()) {
+        await userIdSendRef.set({ amount: 0, userId: userIdSend });
+      }
+    } else {
+      // Message doesn't exist, create a new entry
+      for (const userId of usersId) {
+        const amount = userId === userIdSend ? 0 : 1;
+        await chatRef.child(userId).set({ amount, userId });
+      }
+    }
+  }
+
+
+
 
 }
 

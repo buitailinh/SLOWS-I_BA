@@ -77,7 +77,7 @@ export class AuthController {
   @ApiBadRequestResponse(AUTH_SWAGGER_RESPONSE.BAD_REQUEST_EXCEPTION)
   @ApiInternalServerErrorResponse(AUTH_SWAGGER_RESPONSE.INTERNAL_SERVER_EXCEPTION)
   @UseGuards(AuthGuard('google'))
-  @Get('google')
+  @Get('/google')
   async googleAuth() { };
 
   @ApiOkResponse(AUTH_SWAGGER_RESPONSE.AUTH_OK)
@@ -85,7 +85,7 @@ export class AuthController {
   @ApiBadRequestResponse(AUTH_SWAGGER_RESPONSE.BAD_REQUEST_EXCEPTION)
   @ApiInternalServerErrorResponse(AUTH_SWAGGER_RESPONSE.INTERNAL_SERVER_EXCEPTION)
   @UseGuards(AuthGuard('google'))
-  @Get('google/redirect')
+  @Get('/google/redirect')
   async loginGG(@Req() req, @Res() res) {
     const data = await this.authService.loginGG(req);
     // console.log(data);

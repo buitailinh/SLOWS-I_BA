@@ -8,6 +8,7 @@ import { FollowingRepository } from './following.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateFollowingDto } from './dto/create-following.dto';
 import { UpdateFollowingDto } from './dto/update-following.dto';
+import { ObjectID } from 'typeorm';
 
 @Injectable()
 export class FollowingService {
@@ -178,6 +179,28 @@ export class FollowingService {
     return blocks;
   }
 
+  async CheckUserBlock(user, userCheck) {
+
+    const checkUser = await this.hasRequestBeenSentOrReceived({ creator: user, receiver: userCheck });
+    if (!checkUser)
+      return {
+        status: false
+      };
+
+    if (checkUser.creatorBlock || checkUser.receiverBlock) {
+      return {
+        status: true,
+        message: checkUser.creator === user._id ? "You are blocking this user!" : "This user is blocking you!",
+        actionYou: checkUser.creator.toString() === user._id.toString() ? checkUser.creatorBlock : checkUser.receiverBlock,
+        actionUser: checkUser.creator.toString() !== user._id.toString() ? checkUser.creatorBlock : checkUser.receiverBlock,
+      }
+    }
+
+    return {
+      status: false
+    };
+  }
+
 
   async getById(_id) {
     const followFound = await this.followingRepository.findOne(_id);
@@ -207,9 +230,9 @@ export class FollowingService {
         ]
       },
     });
-    if (found) return true;
 
-    return false;
+
+    return found;
 
   }
 
@@ -246,17 +269,17 @@ export class FollowingService {
     // const creatorFound = await this.userService.getByUserId(creator);
     // const receiverFound = await this.userService.getByUserId(receiver);
 
-    const followFound = await this.hasRequestBeenSentOrReceived({ creator, receiver });
+    const followFound = !!(await this.hasRequestBeenSentOrReceived({ creator, receiver }));
 
     if (followFound) {
       const follow = await this.findOneDetail({ creator, receiver });
       if (userId.toString() === follow.creator.toString()) {
         if (status === 'Block') {
           follow.creatorBlock = !follow.creatorBlock;
-          if (!follow.creatorBlock && time) {
+          if (follow.creatorBlock && time) {
             const addBlockUser: CreateJobBlockQueueDto = {
-              creatorId: creator,
-              receiverId: receiver,
+              creatorId: creator._id,
+              receiverId: receiver._id,
               time: time,
             }
             await this.jobQueueService.addBlockUser(addBlockUser);
@@ -275,8 +298,8 @@ export class FollowingService {
           follow.receiverBlock = !follow.receiverBlock;
           if (follow.receiverBlock && time) {
             const addBlockUser: CreateJobBlockQueueDto = {
-              creatorId: creator,
-              receiverId: receiver,
+              creatorId: creator._id,
+              receiverId: receiver._id,
               time: time,
             }
             await this.jobQueueService.addBlockUser(addBlockUser)
@@ -296,8 +319,8 @@ export class FollowingService {
       if (status === "Block") {
         if (followNew.creatorBlock && time) {
           const addBlockUser: CreateJobBlockQueueDto = {
-            creatorId: creator,
-            receiverId: receiver,
+            creatorId: creator._id,
+            receiverId: receiver._id,
             time: time,
           }
           await this.jobQueueService.addBlockUser(addBlockUser)

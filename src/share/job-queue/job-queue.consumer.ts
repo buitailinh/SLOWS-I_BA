@@ -1,3 +1,4 @@
+import { NotificationMsgQueueDto } from './dto/notification-msg-queue.dto';
 import { CreateFollowingDto } from './../../api/user/dto/createFollowing.dto';
 import { UserService } from 'src/api/user/user.service';
 import { FollowingService } from './../../api/following/following.service';
@@ -53,6 +54,15 @@ export class JobQueueConsuner {
     };
   }
 
+  @Process('send-notification-msg')
+  async sendMsgNotification(job: Job<NotificationMsgQueueDto>) {
+    await this.firebase.notificationChat(job.data.msgId, job.data.usersId, job.data.userIdSend);
+    return {
+      success: true,
+      message: `User ${job.data.msgId} was had notification new`,
+    };
+  }
+
   @Process('add-block-user')
   async addBlockUser(job: Job<CreateJobBlockQueueDto>) {
 
@@ -63,7 +73,7 @@ export class JobQueueConsuner {
       time: 0
     }
     await this.userService.creatOrUpdateFollow(updateStatus, job.data.creatorId);
-
+    console.log('bo block');
     return {
       success: true,
       message: `User ${job.data.creatorId} was unblock ${job.data.receiverId} !`,
